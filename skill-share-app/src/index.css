@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.swipe-left {
+  transform: translateX(-100%) rotate(-20deg);
+}
+
+.swipe-right {
+  transform: translateX(100%) rotate(20deg);
+}
+
+
+/* Animate.css styles */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
