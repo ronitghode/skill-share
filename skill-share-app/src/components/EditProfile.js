@@ -50,18 +50,11 @@ const EditProfile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const profileData = new FormData();
-    profileData.append('bio', formData.bio);
-    profileData.append('gender', formData.gender);
-    profileData.append('skills', formData.skills.split(',').map(skill => skill.trim()));
-    profileData.append('name', formData.username);
-    if (formData.profileImage) {
-      profileData.append('image', formData.profileImage); // Ensure profileImage is a file object
-    }
-
+    
     try {
-      await updateUserProfile(profileData);
+      const { bio, gender, username, skills ,profileImage} = formData;
+      const skillsArray = skills.split(',').map(skill => skill.trim());
+      await updateUserProfile({bio, gender, username, skillsArray ,profileImage});
       setSuccess('Profile updated successfully!');
     } catch (err) {
       console.error('Error updating profile:', err);

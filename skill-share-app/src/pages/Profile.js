@@ -51,7 +51,7 @@ const Profile = () => {
       <div className="w-full sm:w-2/3 md:w-1/2 lg:w-1/3 bg-gray-800 p-8 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-2xl">
         <div className="relative mb-6">
           <img
-            src={userData.image || 'path/to/default/image.jpg'} // Default image path
+            src={userData.profileImage || 'path/to/default/image.jpg'} // Default image path
             alt="Profile"
             className="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gradient-to-tr from-purple-400 to-pink-500"
           />

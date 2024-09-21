@@ -61,15 +61,14 @@ exports.getUserProfile = async (req, res) => {
 
 // Update User Profile
 exports.updateUserProfile = async (req, res) => {
-  const { bio, gender, skills } = req.body;
-  
-  try {
-    // If an image file is uploaded, get its path
-    const image = req.file ? `/uploads/${req.file.filename}` : undefined;
+  const { bio, gender, username, skillsArray, profileImage } = req.body;
 
-    const updatedFields = { bio, gender, skills };
-    if (image) {
-      updatedFields.profileImage = image; // Update profileImage field if an image is uploaded
+  try {
+    const updatedFields = { bio, gender, skills: skillsArray, username };
+
+    // If an image file is uploaded in base64 format
+    if (profileImage) {
+      updatedFields.profileImage = profileImage; // Update profileImage field with the base64 string
     }
 
     // Find user and update
@@ -85,6 +84,25 @@ exports.updateUserProfile = async (req, res) => {
 
     res.status(200).json({ message: 'Profile updated successfully', user: updatedUser });
   } catch (error) {
+    console.error('Error updating user profile:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+
+};
+
+
+exports.getUserMatches = async (req, res) => {
+  try {
+    const userId = req.user.id; // Assuming you're using middleware to set req.user
+    const user = await User.findById(userId).populate('matches'); // Populate matched users
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json(user.matches); // Return matched users
+  } catch (error) {
+    console.error('Error fetching matches:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };

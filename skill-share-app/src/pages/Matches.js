@@ -8,6 +8,8 @@ const Matches = () => {
     const fetchMatches = async () => {
       try {
         const token = localStorage.getItem('token');
+        console.log("Token:", token); // Log the token
+  
         const response = await axios.get('http://localhost:5000/api/users/matches', {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -18,9 +20,10 @@ const Matches = () => {
         console.error('Error fetching matches:', error);
       }
     };
-
+  
     fetchMatches();
   }, []);
+  
 
   if (matches.length === 0) {
     return (

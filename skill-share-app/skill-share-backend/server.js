@@ -16,13 +16,15 @@ connectDB();
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:3000', // Allow requests from this origin
-  methods: 'GET,POST,PUT,DELETE', // Allow these HTTP methods
-  credentials: true, // Allow cookies
+  origin: 'http://localhost:3000',
+  methods: 'GET,POST,PUT,DELETE',
+  credentials: true,
 }));
 
 app.use(morgan('dev')); // Logging middleware
-app.use(express.json()); // To parse incoming JSON requests
+app.use(express.json({ limit: '10mb' })); // To parse incoming JSON requests with a size limit
+app.use(express.urlencoded({ limit: '10mb', extended: true })); // To parse URL-encoded data
+
 
 // Routes
 app.use('/api/users', userRoutes); // This sets up /api/users as the base route for user-related actions

@@ -6,6 +6,7 @@ const {
   registerUser,
   getUserProfile,
   updateUserProfile,
+  getUserMatches,
 } = require('../controllers/userController');
 const authMiddleware = require('../middleware/auth');
 
@@ -18,6 +19,8 @@ router.post('/signup', registerUser);
 // Protected route to get user profile
 router.get('/profile', authMiddleware, getUserProfile);
 router.put('/update-profile', authMiddleware, updateUserProfile);
+
+router.get('/matches', authMiddleware, getUserMatches);
 
 // Other routes...
 module.exports = router;

@@ -13,7 +13,7 @@ const UserSchema = new mongoose.Schema({
       ref: 'User',
     },
   ],
-  
+  profileImage: String,
 });
 
 module.exports = mongoose.model('User', UserSchema);

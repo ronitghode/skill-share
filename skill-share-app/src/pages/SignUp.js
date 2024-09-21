@@ -15,7 +15,6 @@ const SignUp = () => {
     try {
       const { email, password, name, skills } = formData;
       const skillsArray = skills.split(',').map(skill => skill.trim()); // Convert skills string to array
-      console.log(skillsArray);
       const response = await registerUser(email, password, name, skillsArray);
       const data = await response;
 
