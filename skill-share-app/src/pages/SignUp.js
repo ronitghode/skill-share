@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // To handle navigation
 import { registerUser } from '../utils/api';
+
 const SignUp = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '', skills: '' });
+  const [loading, setLoading] = useState(false); // Loading state
   const navigate = useNavigate(); // To redirect the user
 
   const handleInputChange = (e) => {
@@ -12,23 +14,32 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Set loading to true while submitting
+  
     try {
       const { email, password, name, skills } = formData;
       const skillsArray = skills.split(',').map(skill => skill.trim()); // Convert skills string to array
-      const response = await registerUser(email, password, name, skillsArray);
-      const data = await response;
-
-      if (data.message === "User registered successfully") {
-        alert('Sign up successful!');
-        navigate('/signin'); 
+  
+      const response = await registerUser(email, password, name, skillsArray); // Ensure password is included
+      // console.log(response);
+      // Check if response is OK or has an error
+      if (response.message==="User registered successfully") {
+        // const data = await response.json();
+          alert('Sign up successful!');
+          navigate('/signin');
+        
       } else {
-        alert(data.message || 'Something went wrong. Please try again.');
+        // const errorData = await response.json();
+        alert('Failed to register. Please try again.');
       }
     } catch (error) {
       console.error('Error:', error);
+      alert('An error occurred. Please try again later.');
+    } finally {
+      setLoading(false); // Reset loading state
     }
   };
-
+  
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
@@ -73,9 +84,10 @@ const SignUp = () => {
           />
           <button
             type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg font-bold"
+            className={`w-full ${loading ? 'bg-gray-500' : 'bg-blue-500 hover:bg-blue-600'} text-white py-3 rounded-lg font-bold`}
+            disabled={loading} // Disable button while loading
           >
-            Sign Up
+            {loading ? 'Signing Up...' : 'Sign Up'}
           </button>
         </form>
         <p className="text-center mt-4 text-gray-400">

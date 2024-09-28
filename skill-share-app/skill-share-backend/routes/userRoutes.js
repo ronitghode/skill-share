@@ -1,4 +1,3 @@
-// routes/userRoutes.js
 const express = require('express');
 const router = express.Router();
 const {
@@ -7,6 +6,7 @@ const {
   getUserProfile,
   updateUserProfile,
   getUserMatches,
+  getAllUsers, // Ensure this is imported
 } = require('../controllers/userController');
 const authMiddleware = require('../middleware/auth');
 
@@ -20,7 +20,10 @@ router.post('/signup', registerUser);
 router.get('/profile', authMiddleware, getUserProfile);
 router.put('/update-profile', authMiddleware, updateUserProfile);
 
+// Route to get user matches
 router.get('/matches', authMiddleware, getUserMatches);
 
-// Other routes...
+// Route to get all users
+router.get('/', authMiddleware, getAllUsers); // Change this line
+
 module.exports = router;

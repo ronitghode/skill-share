@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getUserProfile } from '../utils/api';
 import { useNavigate } from 'react-router-dom';
-
+import defaultImgae from '../data/image.png'
 const Profile = () => {
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
@@ -51,7 +51,7 @@ const Profile = () => {
       <div className="w-full sm:w-2/3 md:w-1/2 lg:w-1/3 bg-gray-800 p-8 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-2xl">
         <div className="relative mb-6">
           <img
-            src={userData.profileImage || 'path/to/default/image.jpg'} // Default image path
+            src={userData.profileImage || defaultImgae} // Default image path
             alt="Profile"
             className="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gradient-to-tr from-purple-400 to-pink-500"
           />
@@ -70,7 +70,7 @@ const Profile = () => {
           onClick={handleEditProfile}
           className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 rounded-lg font-bold transition-all duration-300 transform hover:scale-105 mb-4"
         >
-          Complete Profile
+          Edit Profile
         </button>
         <button
           onClick={handleLogout}
