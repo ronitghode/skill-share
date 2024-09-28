@@ -21,15 +21,11 @@ const SignUp = () => {
       const skillsArray = skills.split(',').map(skill => skill.trim()); // Convert skills string to array
   
       const response = await registerUser(email, password, name, skillsArray); // Ensure password is included
-      // console.log(response);
-      // Check if response is OK or has an error
       if (response.message==="User registered successfully") {
-        // const data = await response.json();
           alert('Sign up successful!');
           navigate('/signin');
         
       } else {
-        // const errorData = await response.json();
         alert('Failed to register. Please try again.');
       }
     } catch (error) {
