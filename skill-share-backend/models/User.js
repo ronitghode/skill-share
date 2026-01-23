@@ -1,23 +1,23 @@
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
-    name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: true,
-    },
-    skills: {
-      type: [String],
-      required: true,
-    },
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  skills: {
+    type: [String],
+    required: true,
+  },
   gender: {
     type: String, // 'Male', 'Female', 'Non-binary', or other values
     enum: ['Male', 'Female', 'Non-binary', 'Other']
@@ -29,6 +29,12 @@ const UserSchema = new mongoose.Schema({
   profileImage: {
     type: String, // URL or path to the profile image
   },
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User', // Users that this user has liked
+    },
+  ],
   matches: [
     {
       type: mongoose.Schema.Types.ObjectId,

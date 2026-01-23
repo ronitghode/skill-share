@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/database'); // Ensure you have a db.js file for MongoDB connection
 const userRoutes = require('./routes/userRoutes'); // Import user-related routes
+const messageRoutes = require('./routes/messageRoutes'); // Import message routes
 const cors = require('cors');
 const morgan = require('morgan'); // For logging
 
@@ -28,6 +29,7 @@ app.use(express.urlencoded({ limit: '10mb', extended: true })); // To parse URL-
 
 // Routes
 app.use('/api/users', userRoutes); // This sets up /api/users as the base route for user-related actions
+app.use('/api/messages', messageRoutes); // This sets up /api/messages as the base route for message-related actions
 
 // Root route to check if server is running
 app.get('/', (req, res) => {

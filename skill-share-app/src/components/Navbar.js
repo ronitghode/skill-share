@@ -12,19 +12,24 @@ const Navbar = ({ isAuthenticated }) => {
       </div>
       <ul className="flex space-x-6">
         <li>
-          <a href="/" className="text-white hover:text-yellow-400 transition-colors duration-300">
+          <Link to="/" className="text-white hover:text-yellow-400 transition-colors duration-300">
             Home
-          </a>
+          </Link>
         </li>
         <li>
-          <a href="/matches" className="text-white hover:text-yellow-400 transition-colors duration-300">
+          <Link to="/likes" className="text-white hover:text-yellow-400 transition-colors duration-300">
+            Likes
+          </Link>
+        </li>
+        <li>
+          <Link to="/matches" className="text-white hover:text-yellow-400 transition-colors duration-300">
             Matches
-          </a>
+          </Link>
         </li>
         <li>
-          <a href="/profile" className="text-white hover:text-yellow-400 transition-colors duration-300">
+          <Link to="/profile" className="text-white hover:text-yellow-400 transition-colors duration-300">
             Profile
-          </a>
+          </Link>
         </li>
         {/* Removed Sign In and Sign Up buttons */}
       </ul>

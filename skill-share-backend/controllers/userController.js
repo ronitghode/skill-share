@@ -39,7 +39,7 @@ exports.registerUser = async (req, res) => {
 // Login User
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
-  
+
   try {
     if (!email || !password) {
       return res.status(400).json({ message: 'Email and password are required' });
@@ -83,7 +83,7 @@ exports.updateUserProfile = async (req, res) => {
 
   try {
     const updatedFields = {};
-    
+
     if (bio) updatedFields.bio = bio;
     if (gender) updatedFields.gender = gender;
     if (username) updatedFields.username = username;
@@ -129,10 +129,114 @@ exports.getUserMatches = async (req, res) => {
   }
 };
 
-// Get All Users
+// Get Users Who Liked Current User
+exports.getUserLikes = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const usersWhoLiked = await User.find({ likes: userId }).select('-password -likes -matches');
+
+    res.status(200).json(usersWhoLiked);
+  } catch (error) {
+    console.error('Error fetching likes:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Like a user and check for mutual match
+exports.likeUser = async (req, res) => {
+  try {
+    const currentUserId = req.user.id;
+    const { likedUserId } = req.params;
+
+    // Validate
+    if (currentUserId === likedUserId) {
+      return res.status(400).json({ message: 'Cannot like yourself' });
+    }
+
+    const currentUser = await User.findById(currentUserId);
+    const likedUser = await User.findById(likedUserId);
+
+    if (!likedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (!currentUser) {
+      return res.status(404).json({ message: 'Current user not found' });
+    }
+
+    // Check if already liked
+    if (currentUser.likes && currentUser.likes.includes(likedUserId)) {
+      return res.status(400).json({ message: 'Already liked this user' });
+    }
+
+    // Check if already matched
+    if (currentUser.matches && currentUser.matches.includes(likedUserId)) {
+      return res.status(400).json({ message: 'Already matched with this user' });
+    }
+
+    // Add to current user's likes
+    if (!currentUser.likes) {
+      currentUser.likes = [];
+    }
+    currentUser.likes.push(likedUserId);
+    await currentUser.save();
+
+    // Check for mutual match
+    if (likedUser.likes && likedUser.likes.includes(currentUserId)) {
+      // Mutual match! Add to both users' matches
+      if (!currentUser.matches) {
+        currentUser.matches = [];
+      }
+      if (!likedUser.matches) {
+        likedUser.matches = [];
+      }
+
+      currentUser.matches.push(likedUserId);
+      likedUser.matches.push(currentUserId);
+
+      await currentUser.save();
+      await likedUser.save();
+
+      return res.status(200).json({
+        message: 'Match created!',
+        isMatch: true,
+        matchedUser: {
+          _id: likedUser._id,
+          name: likedUser.name,
+          profileImage: likedUser.profileImage,
+          bio: likedUser.bio
+        }
+      });
+    }
+
+    res.status(200).json({ message: 'User liked', isMatch: false });
+  } catch (error) {
+    console.error('Error liking user:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Get All Users (exclude current user, already liked, and matched users) (exclude current user, already liked, and matched users)
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().select('-password'); // Exclude passwords for security
+    const currentUserId = req.user.id;
+    const currentUser = await User.findById(currentUserId);
+
+    if (!currentUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Get IDs to exclude (current user, already liked, and matched users)
+    const excludeIds = [
+      currentUserId,
+      ...(currentUser.likes || []),
+      ...(currentUser.matches || [])
+    ];
+
+    const users = await User.find({
+      _id: { $nin: excludeIds }
+    }).select('-password');
+
     res.status(200).json(users);
   } catch (error) {
     console.error('Error fetching users:', error);
